@@ -14,4 +14,8 @@ class UECPP_API AC_PC : public APlayerController
 {
 	GENERATED_BODY()
 	
+protected:
+
+	UFUNCTION(BlueprintCallable)
+	void C_PCTest();
 };
