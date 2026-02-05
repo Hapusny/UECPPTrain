@@ -6,9 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "C_PC.generated.h"
 
-class USpringArmComponent;
-class UCameraComponent;
 
+class UInputMappingContext;
 /**
  * 
  */
@@ -19,7 +18,7 @@ class UECPP_API AC_PC : public APlayerController
 	GENERATED_BODY()
 
 public:
-	AC_PC();
+	virtual void BeginPlay()override;
 	
 protected:
 
@@ -28,10 +27,6 @@ protected:
 
 private:
 
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<USpringArmComponent>CameraBoom;
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UCameraComponent>PlayerCamera;
-
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputMappingContext> InputMapping;
 };

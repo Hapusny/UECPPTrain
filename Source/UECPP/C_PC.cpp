@@ -2,19 +2,21 @@
 
 
 #include "C_PC.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "Camera/CameraComponent.h"
+#include "EnhancedInputSubsystems.h"
 
-AC_PC::AC_PC()
+void AC_PC::BeginPlay()
 {
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>("CameraBoom");
-	PlayerCamera = CreateDefaultSubobject<UCameraComponent>("PlayerCamera");
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 600.f;
-	CameraBoom->SetRelativeRotation(FRotator(-30.f, 0.f, 0.f));
-	PlayerCamera->SetupAttachment(CameraBoom);
-
-	
+	Super::BeginPlay();
+	if (ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+		{
+			if (InputMapping)
+			{
+				InputSystem->AddMappingContext(InputMapping,0);
+			}
+		}
+	}
 }
 
 void AC_PC::C_PCTest()
