@@ -8,6 +8,8 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UInputAction;
+struct FInputActionValue;
 
 UCLASS()
 class UECPP_API AC_Character : public ACharacter
@@ -22,6 +24,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void Move(const FInputActionValue& Value);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -32,6 +36,9 @@ public:
 private:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USpringArmComponent>CameraBoom;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* MoveAction;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCameraComponent>PlayerCamera;

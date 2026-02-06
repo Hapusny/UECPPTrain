@@ -3,18 +3,16 @@
 
 #include "C_PC.h"
 #include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 
 void AC_PC::BeginPlay()
 {
 	Super::BeginPlay();
-	if (ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player))
+	if (UEnhancedInputLocalPlayerSubsystem* InputSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+		if (InputMapping)
 		{
-			if (InputMapping)
-			{
-				InputSystem->AddMappingContext(InputMapping,0);
-			}
+			InputSystem->AddMappingContext(InputMapping, 0);
 		}
 	}
 }
