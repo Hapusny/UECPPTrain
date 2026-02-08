@@ -48,6 +48,16 @@ void AC_Character::Move(const FInputActionValue& Value)
 	}
 }
 
+void AC_Character::Look(const FInputActionValue& Value)
+{
+	FVector2D LookVector = Value.Get<FVector2D>();
+	if (GetController() != nullptr)
+	{
+		AddControllerPitchInput(LookVector.Y);
+		AddControllerYawInput(LookVector.X);
+	}
+}
+
 // Called every frame
 void AC_Character::Tick(float DeltaTime)
 {
@@ -62,6 +72,7 @@ void AC_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AC_Character::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AC_Character::Look);
 	}
 }
 

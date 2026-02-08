@@ -26,6 +26,8 @@ protected:
 
 	void Move(const FInputActionValue& Value);
 
+	void Look(const FInputActionValue& Value);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -39,6 +41,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere,Category = "Input")
+	UInputAction* LookAction;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCameraComponent>PlayerCamera;
