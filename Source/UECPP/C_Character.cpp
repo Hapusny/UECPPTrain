@@ -58,6 +58,22 @@ void AC_Character::Look(const FInputActionValue& Value)
 	}
 }
 
+void AC_Character::Jump()
+{
+	if (GetController() != nullptr)
+	{
+		Super::Jump();
+	}
+}
+
+void AC_Character::StopJump()
+{
+	if (GetController() != nullptr)
+	{
+		Super::StopJumping();
+	}
+}
+
 // Called every frame
 void AC_Character::Tick(float DeltaTime)
 {
@@ -73,6 +89,8 @@ void AC_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AC_Character::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AC_Character::Look);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AC_Character::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AC_Character::StopJump);
 	}
 }
 
