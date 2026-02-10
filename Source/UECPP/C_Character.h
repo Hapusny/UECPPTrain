@@ -9,6 +9,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
+class USphereComponent;
 struct FInputActionValue;
 
 UCLASS()
@@ -32,6 +33,18 @@ protected:
 
 	void StopJump();
 
+	UFUNCTION()
+	void OverlapWithActor(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Collision")
+	TObjectPtr<USphereComponent>CollisionSphere;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -43,6 +56,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USpringArmComponent>CameraBoom;
 
+	
+
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* MoveAction;
 
@@ -50,7 +65,6 @@ private:
 	UInputAction* LookAction;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
-
 	UInputAction* JumpAction;
 
 	UPROPERTY(EditAnywhere)
