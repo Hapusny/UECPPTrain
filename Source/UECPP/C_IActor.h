@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "C_IActor.generated.h"
 
+class UUserWidget;
+
 UCLASS()
 class UECPP_API AC_IActor : public AActor,public IC_I
 {
@@ -26,4 +28,9 @@ public:
 
 	virtual void DoSomething_Implementation() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget>ShowWidget;
+private:
+	UPROPERTY()
+	TObjectPtr<UUserWidget>SpawnedWidget;
 };

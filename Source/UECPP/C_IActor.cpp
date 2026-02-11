@@ -2,6 +2,11 @@
 
 
 #include "C_IActor.h"
+#include "GameFramework/PlayerController.h"
+#include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
+
+
 
 // Sets default values
 AC_IActor::AC_IActor()
@@ -28,5 +33,17 @@ void AC_IActor::Tick(float DeltaTime)
 void AC_IActor::DoSomething_Implementation()
 {
 	UE_LOG(LogTemp, Warning, TEXT("CPPTest"));
+	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+	if (PC)
+	{
+		if (ShowWidget)
+		{
+			SpawnedWidget = CreateWidget<UUserWidget>(PC, ShowWidget);
+			if (SpawnedWidget)
+			{
+				SpawnedWidget->AddToViewport();
+			}
+		}
+	}
 }
 
