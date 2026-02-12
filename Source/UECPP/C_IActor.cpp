@@ -30,9 +30,8 @@ void AC_IActor::Tick(float DeltaTime)
 
 }
 
-void AC_IActor::DoSomething_Implementation()
+void AC_IActor::ShowWidget_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("CPPTest"));
 	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
 	if (PC)
 	{
@@ -44,6 +43,14 @@ void AC_IActor::DoSomething_Implementation()
 				SpawnedWidget->AddToViewport();
 			}
 		}
+	}
+}
+
+void AC_IActor::HideWidget_Implementation()
+{
+	if (SpawnedWidget)
+	{
+		SpawnedWidget->RemoveFromParent();
 	}
 }
 

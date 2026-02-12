@@ -26,7 +26,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void DoSomething_Implementation() override;
+	virtual void ShowWidget_Implementation() override;
+
+	virtual void HideWidget_Implementation() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget>ShowWidget;

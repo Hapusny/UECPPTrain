@@ -9,10 +9,8 @@
 #include "InputActionValue.h"
 #include "C_I.h"
 
-// Sets default values
 AC_Character::AC_Character()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>("CameraBoom");
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>("PlayerCamera");
@@ -25,6 +23,7 @@ AC_Character::AC_Character()
 	CollisionSphere->SetCollisionProfileName("OverlapAllDynamic");
 	CollisionSphere->SetupAttachment(RootComponent);
 	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AC_Character::OverlapWithActor);
+	CollisionSphere->OnComponentEndOverlap.AddDynamic(this, &AC_Character::EndOverlapWithActor);
 }
 
 // Called when the game starts or when spawned
@@ -85,7 +84,15 @@ void AC_Character::OverlapWithActor(UPrimitiveComponent* OverlappedComponent, AA
 {
 	if (OtherActor->Implements<UC_I>())
 	{
-		IC_I::Execute_DoSomething(OtherActor);
+		IC_I::Execute_ShowWidget(OtherActor);
+	}
+}
+
+void AC_Character::EndOverlapWithActor(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor->Implements<UC_I>())
+	{
+		IC_I::Execute_HideWidget(OtherActor);
 	}
 }
 
