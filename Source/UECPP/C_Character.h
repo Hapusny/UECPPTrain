@@ -34,6 +34,8 @@ protected:
 
 	void StopJump();
 
+	void PickUp();
+
 	UFUNCTION()
 	void OverlapWithActor(
 		UPrimitiveComponent* OverlappedComponent,
@@ -64,8 +66,6 @@ private:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USpringArmComponent>CameraBoom;
 
-	
-
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* MoveAction;
 
@@ -75,7 +75,11 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* JumpAction;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* PickUpAction;
+
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCameraComponent>PlayerCamera;
 
+	TObjectPtr<AActor>PickUpActor;
 };

@@ -80,11 +80,24 @@ void AC_Character::StopJump()
 	}
 }
 
+void AC_Character::PickUp()
+{
+	if (PickUpActor)
+	{
+		if (PickUpActor->Implements<UC_I>())
+		{
+			IC_I::Execute_PickUp(PickUpActor);
+			PickUpActor = nullptr;
+		}
+	}
+}
+
 void AC_Character::OverlapWithActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor->Implements<UC_I>())
 	{
 		IC_I::Execute_ShowWidget(OtherActor);
+		PickUpActor = OtherActor;
 	}
 }
 
@@ -93,6 +106,7 @@ void AC_Character::EndOverlapWithActor(UPrimitiveComponent* OverlappedComp, AAct
 	if (OtherActor->Implements<UC_I>())
 	{
 		IC_I::Execute_HideWidget(OtherActor);
+		PickUpActor = nullptr;
 	}
 }
 
@@ -113,6 +127,7 @@ void AC_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AC_Character::Look);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AC_Character::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AC_Character::StopJump);
+		EnhancedInputComponent->BindAction(PickUpAction, ETriggerEvent::Triggered, this, &AC_Character::PickUp);
 	}
 }
 

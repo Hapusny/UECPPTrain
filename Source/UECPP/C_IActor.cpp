@@ -54,3 +54,8 @@ void AC_IActor::HideWidget_Implementation()
 	}
 }
 
+void AC_IActor::PickUp_Implementation()
+{
+	Destroy();
+}
+

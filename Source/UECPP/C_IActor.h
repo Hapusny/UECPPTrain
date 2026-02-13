@@ -30,6 +30,8 @@ public:
 
 	virtual void HideWidget_Implementation() override;
 
+	virtual void PickUp_Implementation() override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget>ShowWidget;
 private:

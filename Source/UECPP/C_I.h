@@ -28,4 +28,8 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "MyInterface")
 	void HideWidget();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "MyInterface")
+
+	void PickUp();
 };
