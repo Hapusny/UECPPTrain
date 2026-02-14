@@ -8,6 +8,8 @@
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
 #include "C_I.h"
+#include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 AC_Character::AC_Character()
 {
@@ -86,6 +88,16 @@ void AC_Character::PickUp()
 	{
 		if (PickUpActor->Implements<UC_I>())
 		{
+			MySpawnActor = GetWorld()->SpawnActor<AActor>(PickUpActor->GetClass(), SpawnLocation, FRotator::ZeroRotator);
+			APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+			if (PC)
+			{
+				MySpawnWidget = CreateWidget<UUserWidget>(PC, ShowWidget);
+				MySpawnWidget->AddToViewport();
+				FInputModeUIOnly InputMode;
+				PC->SetInputMode(InputMode);
+				PC->SetShowMouseCursor(true);
+			}
 			IC_I::Execute_PickUp(PickUpActor);
 			PickUpActor = nullptr;
 		}

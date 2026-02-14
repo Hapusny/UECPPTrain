@@ -55,6 +55,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Collision")
 	TObjectPtr<USphereComponent>CollisionSphere;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget>ShowWidget;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -65,6 +68,9 @@ public:
 private:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USpringArmComponent>CameraBoom;
+
+	UPROPERTY(EditAnywhere)
+	FVector SpawnLocation;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* MoveAction;
@@ -78,8 +84,15 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* PickUpAction;
 
+	
+
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCameraComponent>PlayerCamera;
 
 	TObjectPtr<AActor>PickUpActor;
+
+	TObjectPtr<AActor>MySpawnActor;
+
+	UPROPERTY()
+	TObjectPtr<UUserWidget>MySpawnWidget;
 };
