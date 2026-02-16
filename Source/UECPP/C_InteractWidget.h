@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "C_InteractWidget.generated.h"
 
+
+class UButton;
 /**
  * 
  */
@@ -14,4 +16,16 @@ class UECPP_API UC_InteractWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+
+protected:
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> Button;
+
+	// 初始化时绑定点击事件
+	virtual bool Initialize() override;
+
+private:
+	// 按钮点击事件的处理函数
+	UFUNCTION()
+	void OnMyButtonClicked();
 };
