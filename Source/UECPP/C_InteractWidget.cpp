@@ -3,6 +3,10 @@
 
 #include "C_InteractWidget.h"
 #include "Components/Button.h"
+#include "C_CM.h"
+#include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
+
 
 bool UC_InteractWidget::Initialize()
 {
@@ -16,6 +20,14 @@ bool UC_InteractWidget::Initialize()
     if (Button)
     {
         Button->OnClicked.AddDynamic(this, &UC_InteractWidget::OnMyButtonClicked);
+    }
+    APlayerController* PC = GetOwningPlayer();
+    
+    if (PC)
+    {// 通过PC获取World，再获取GameMode
+        UWorld* World = PC->GetWorld();
+
+        CatchCamera = Cast<AC_CM>(World->GetAuthGameMode())->GetCatchCamera();
     }
 
     IsLeftDown = false;

@@ -17,4 +17,11 @@ class UECPP_API AC_CM : public AGameModeBase
 protected:
 	virtual void BeginPlay()override;
 
+public:
+	TObjectPtr<AActor> GetCatchCamera();
+
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor>CatchCameraClass;
+
 };

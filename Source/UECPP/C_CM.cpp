@@ -15,3 +15,11 @@ void AC_CM::BeginPlay()
 		PC->SetShowMouseCursor(false);
 	}
 }
+
+TObjectPtr<AActor> AC_CM::GetCatchCamera()
+{
+	TObjectPtr<AActor> CatchCamera = UGameplayStatics::GetActorOfClass(GetWorld(),CatchCameraClass);
+
+	return CatchCamera;
+}
+
