@@ -5,6 +5,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "C_Character.h"
 
 
 
@@ -13,14 +14,34 @@ AC_IActor::AC_IActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
 void AC_IActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	AC_Character* MYC = Cast<AC_Character>(UGameplayStatics::GetPlayerController(this, 0)->GetPawn());
+	if (MYC)
+	{
+		MYC->TargetActor.BindUObject(this, &AC_IActor::MoveActorToPlayer);
+	}
+}
+
+void AC_IActor::MoveActorToPlayer()
+{
+	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+	if (PC)
+	{
+		FVector NewPlace = PC->GetPawn()->GetActorLocation();
+
+		const FRotator Rotation = PC->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		// get forward vector
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+		NewPlace = NewPlace + ForwardDirection * 500;
+		SetActorLocation(NewPlace);
+	}
 }
 
 // Called every frame

@@ -12,6 +12,8 @@ class UInputAction;
 class USphereComponent;
 struct FInputActionValue;
 
+DECLARE_DELEGATE(FMoveActor)
+
 UCLASS()
 class UECPP_API AC_Character : public ACharacter
 {
@@ -35,6 +37,8 @@ protected:
 	void StopJump();
 
 	void PickUp();
+
+	void MoveActor();
 
 	UFUNCTION()
 	void OverlapWithActor(
@@ -65,6 +69,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	FMoveActor TargetActor;
+
 private:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USpringArmComponent>CameraBoom;
@@ -83,6 +89,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* PickUpAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* MoveActorAction;
 
 	
 

@@ -104,6 +104,14 @@ void AC_Character::PickUp()
 	}
 }
 
+void AC_Character::MoveActor()
+{
+	if (TargetActor.IsBound())
+	{
+		TargetActor.Execute();
+	}
+}
+
 void AC_Character::OverlapWithActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor->Implements<UC_I>())
@@ -140,6 +148,7 @@ void AC_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AC_Character::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AC_Character::StopJump);
 		EnhancedInputComponent->BindAction(PickUpAction, ETriggerEvent::Triggered, this, &AC_Character::PickUp);
+		EnhancedInputComponent->BindAction(MoveActorAction, ETriggerEvent::Triggered, this, &AC_Character::MoveActor);
 	}
 }
 
