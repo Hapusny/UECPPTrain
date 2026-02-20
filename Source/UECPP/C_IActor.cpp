@@ -14,13 +14,26 @@ AC_IActor::AC_IActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	bReplicates = true;
+
+	// 如果你想让Actor移动同步，还需要
+	SetReplicateMovement(true);
 }
 
 // Called when the game starts or when spawned
 void AC_IActor::BeginPlay()
 {
 	Super::BeginPlay();
-	AC_Character* MYC = Cast<AC_Character>(UGameplayStatics::GetPlayerController(this, 0)->GetPawn());
+	AC_Character* MYC;
+	if (GetNetConnection())
+	{
+		MYC = Cast<AC_Character>(Cast<APlayerController>(GetNetConnection()->PlayerController)->GetPawn());
+	}
+	else
+	{
+		MYC = Cast<AC_Character>(UGameplayStatics::GetPlayerController(this, 0)->GetPawn());
+	}
 	if (MYC)
 	{
 		MYC->TargetActor.BindUObject(this, &AC_IActor::MoveActorToPlayer);
@@ -29,7 +42,15 @@ void AC_IActor::BeginPlay()
 
 void AC_IActor::MoveActorToPlayer()
 {
-	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+	APlayerController* PC;
+	if (GetNetConnection())
+	{
+		PC = Cast<APlayerController>(GetNetConnection()->PlayerController);
+	}
+	else
+	{
+		PC = UGameplayStatics::GetPlayerController(this, 0);
+	}
 	if (PC)
 	{
 		FVector NewPlace = PC->GetPawn()->GetActorLocation();
@@ -53,7 +74,15 @@ void AC_IActor::Tick(float DeltaTime)
 
 void AC_IActor::ShowWidget_Implementation()
 {
-	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+	APlayerController* PC;
+	if (GetNetConnection())
+	{
+		PC = Cast<APlayerController>(GetNetConnection()->PlayerController);
+	}
+	else
+	{
+		PC = UGameplayStatics::GetPlayerController(this, 0);
+	}
 	if (PC)
 	{
 		if (ShowWidget)

@@ -89,7 +89,15 @@ void AC_Character::PickUp()
 		if (PickUpActor->Implements<UC_I>())
 		{
 			MySpawnActor = GetWorld()->SpawnActor<AActor>(PickUpActor->GetClass(), SpawnLocation, FRotator::ZeroRotator);
-			APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+			APlayerController* PC;
+			if (GetNetConnection())
+			{
+				PC = Cast<APlayerController>(GetNetConnection()->PlayerController);
+			}
+			else
+			{
+				PC = UGameplayStatics::GetPlayerController(this, 0);
+			}
 			if (PC)
 			{
 				MySpawnWidget = CreateWidget<UUserWidget>(PC, ShowWidget);
