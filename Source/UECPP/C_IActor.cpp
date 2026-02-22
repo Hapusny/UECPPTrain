@@ -15,9 +15,8 @@ AC_IActor::AC_IActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bNetLoadOnClient = true;
 	bReplicates = true;
-
-	// 如果你想让Actor移动同步，还需要
 	SetReplicateMovement(true);
 }
 
