@@ -10,6 +10,7 @@
 #include "C_I.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 
 AC_Character::AC_Character()
 {
@@ -158,5 +159,17 @@ void AC_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(PickUpAction, ETriggerEvent::Triggered, this, &AC_Character::PickUp);
 		EnhancedInputComponent->BindAction(MoveActorAction, ETriggerEvent::Triggered, this, &AC_Character::MoveActor);
 	}
+}
+
+void AC_Character::SpawnArmor_Implementation(float ArmorAmount)
+{
+	Armor = ArmorAmount;
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("Armor: %f"), Armor));
+}
+
+void AC_Character::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ThisClass, Armor);
 }
 

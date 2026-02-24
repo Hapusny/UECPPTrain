@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "C_IPC.h"
 #include "GameFramework/Character.h"
 #include "C_Character.generated.h"
 
@@ -15,7 +16,7 @@ struct FInputActionValue;
 DECLARE_DELEGATE(FMoveActor)
 
 UCLASS()
-class UECPP_API AC_Character : public ACharacter
+class UECPP_API AC_Character : public ACharacter,public IC_IPC
 {
 	GENERATED_BODY()
 
@@ -69,7 +70,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void SpawnArmor_Implementation(float ArmorAmount)override;
+
 	FMoveActor TargetActor;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps)const override;
 
 private:
 	UPROPERTY(EditAnywhere)
@@ -104,4 +109,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UUserWidget>MySpawnWidget;
+
+	UPROPERTY(Replicated)
+	float Armor;
 };

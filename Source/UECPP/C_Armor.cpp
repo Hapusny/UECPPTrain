@@ -3,6 +3,7 @@
 
 #include "C_Armor.h"
 #include "Components/SphereComponent.h"
+#include "C_IPC.h"
 
 // Sets default values
 AC_Armor::AC_Armor()
@@ -41,6 +42,11 @@ void AC_Armor::NotifyActorBeginOverlap(AActor* OtherActor)
 	if (HasAuthority())
 	{
 		AttachToActor(OtherActor, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+		if (OtherActor->Implements<UC_IPC>())
+		{
+			IC_IPC::Execute_SpawnArmor(OtherActor, ArmorValue);
+		}
 	}
 }
 
