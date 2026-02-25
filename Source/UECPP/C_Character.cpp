@@ -27,13 +27,21 @@ AC_Character::AC_Character()
 	CollisionSphere->SetupAttachment(RootComponent);
 	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AC_Character::OverlapWithActor);
 	CollisionSphere->OnComponentEndOverlap.AddDynamic(this, &AC_Character::EndOverlapWithActor);
+	PickedUpNum = 0;
 }
 
 // Called when the game starts or when spawned
 void AC_Character::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	if (GetNetConnection())
+	{
+		PC = Cast<APlayerController>(GetNetConnection()->PlayerController);
+	}
+	else
+	{
+		PC = UGameplayStatics::GetPlayerController(this, 0);
+	}
 }
 
 void AC_Character::Move(const FInputActionValue& Value)
@@ -90,15 +98,6 @@ void AC_Character::PickUp()
 		if (PickUpActor->Implements<UC_I>())
 		{
 			MySpawnActor = GetWorld()->SpawnActor<AActor>(PickUpActor->GetClass(), SpawnLocation, FRotator::ZeroRotator);
-			APlayerController* PC;
-			if (GetNetConnection())
-			{
-				PC = Cast<APlayerController>(GetNetConnection()->PlayerController);
-			}
-			else
-			{
-				PC = UGameplayStatics::GetPlayerController(this, 0);
-			}
 			if (PC)
 			{
 				MySpawnWidget = CreateWidget<UUserWidget>(PC, ShowWidget);
@@ -109,6 +108,7 @@ void AC_Character::PickUp()
 			}
 			IC_I::Execute_PickUp(PickUpActor);
 			PickUpActor = nullptr;
+			PickedUpNum++;
 		}
 	}
 }
@@ -123,19 +123,25 @@ void AC_Character::MoveActor()
 
 void AC_Character::OverlapWithActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->Implements<UC_I>())
+	if (HasAuthority())
 	{
-		IC_I::Execute_ShowWidget(OtherActor);
-		PickUpActor = OtherActor;
+		if (OtherActor->Implements<UC_I>())
+		{
+			IC_I::Execute_ShowWidget(OtherActor,PC);
+			PickUpActor = OtherActor;
+		}
 	}
 }
 
 void AC_Character::EndOverlapWithActor(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->Implements<UC_I>())
+	if (HasAuthority())
 	{
-		IC_I::Execute_HideWidget(OtherActor);
-		PickUpActor = nullptr;
+		if (OtherActor->Implements<UC_I>())
+		{
+			IC_I::Execute_HideWidget(OtherActor);
+			PickUpActor = nullptr;
+		}
 	}
 }
 
@@ -171,5 +177,17 @@ void AC_Character::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ThisClass, Armor);
+	DOREPLIFETIME_CONDITION(ThisClass, PickedUpNum,COND_Custom);
+}
+
+void AC_Character::PreReplication(IRepChangedPropertyTracker& ChangedPropertyTracker)
+{
+	Super::PreReplication(ChangedPropertyTracker);
+	DOREPLIFETIME_ACTIVE_OVERRIDE(ThisClass,PickedUpNum, true);
+}
+
+void AC_Character::OnRep_PickUp()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("PickedUpNum: %d"), PickedUpNum));
 }
 

@@ -28,7 +28,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void ShowWidget_Implementation() override;
+	virtual void ShowWidget_Implementation(APlayerController* PC) override;
 
 	virtual void HideWidget_Implementation() override;
 

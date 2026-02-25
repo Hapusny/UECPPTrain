@@ -76,6 +76,8 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps)const override;
 
+	virtual void PreReplication(IRepChangedPropertyTracker& ChangedPropertyTracker)override;
+
 private:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USpringArmComponent>CameraBoom;
@@ -112,4 +114,13 @@ private:
 
 	UPROPERTY(Replicated)
 	float Armor;
+
+	UPROPERTY(ReplicatedUsing = OnRep_PickUp)
+	int PickedUpNum;
+
+	UFUNCTION()
+	void OnRep_PickUp();
+
+
+	APlayerController* PC;
 };

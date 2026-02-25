@@ -24,7 +24,7 @@ class UECPP_API IC_I
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "MyInterface")
-	void ShowWidget();
+	void ShowWidget(APlayerController* PC);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "MyInterface")
 	void HideWidget();

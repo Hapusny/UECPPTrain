@@ -71,17 +71,8 @@ void AC_IActor::Tick(float DeltaTime)
 
 }
 
-void AC_IActor::ShowWidget_Implementation()
+void AC_IActor::ShowWidget_Implementation(APlayerController* PC)
 {
-	APlayerController* PC;
-	if (GetNetConnection())
-	{
-		PC = Cast<APlayerController>(GetNetConnection()->PlayerController);
-	}
-	else
-	{
-		PC = UGameplayStatics::GetPlayerController(this, 0);
-	}
 	if (PC)
 	{
 		if (ShowWidget)
