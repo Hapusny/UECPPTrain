@@ -11,6 +11,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
+#include "C_HealthComponent.h"
 
 AC_Character::AC_Character()
 {
@@ -27,6 +28,9 @@ AC_Character::AC_Character()
 	CollisionSphere->SetupAttachment(RootComponent);
 	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AC_Character::OverlapWithActor);
 	CollisionSphere->OnComponentEndOverlap.AddDynamic(this, &AC_Character::EndOverlapWithActor);
+	HealthComponent = CreateDefaultSubobject<UC_HealthComponent>("HealthComponent");
+	HealthComponent->SetIsReplicated(true);
+
 	PickedUpNum = 0;
 }
 
@@ -171,6 +175,12 @@ void AC_Character::SpawnArmor_Implementation(float ArmorAmount)
 {
 	Armor = ArmorAmount;
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("Armor: %f"), Armor));
+}
+
+void AC_Character::ChangeHealth_Implementation(float Change)
+{
+	HealthComponent->Health = HealthComponent->Health + Change;
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Health: %f"), HealthComponent->Health));
 }
 
 void AC_Character::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

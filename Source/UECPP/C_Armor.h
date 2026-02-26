@@ -35,4 +35,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float ArmorValue = 100.f;
 
+	UPROPERTY(EditAnywhere)
+	float Change = -20.f;
+
 };

@@ -25,4 +25,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "MyInterface")
 	void SpawnArmor(float ArmoorAmount);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "MyInterface")
+	void ChangeHealth(float Change);
 };

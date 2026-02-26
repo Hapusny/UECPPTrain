@@ -11,6 +11,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
 class USphereComponent;
+class UC_HealthComponent;
 struct FInputActionValue;
 
 DECLARE_DELEGATE(FMoveActor)
@@ -63,6 +64,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget>ShowWidget;
 
+	UPROPERTY(VisibleAnywhere, Category = "HealthComponent")
+	TObjectPtr<UC_HealthComponent>HealthComponent;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -71,6 +75,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void SpawnArmor_Implementation(float ArmorAmount)override;
+
+	virtual void ChangeHealth_Implementation(float Change)override;
 
 	FMoveActor TargetActor;
 

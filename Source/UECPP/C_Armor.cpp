@@ -46,6 +46,7 @@ void AC_Armor::NotifyActorBeginOverlap(AActor* OtherActor)
 		if (OtherActor->Implements<UC_IPC>())
 		{
 			IC_IPC::Execute_SpawnArmor(OtherActor, ArmorValue);
+			IC_IPC::Execute_ChangeHealth(OtherActor, Change);
 		}
 	}
 }
