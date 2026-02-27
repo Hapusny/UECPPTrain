@@ -35,6 +35,7 @@ void UC_HealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UC_HealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ThisClass, Health);
 }
 

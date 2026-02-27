@@ -46,6 +46,7 @@ void AC_Character::BeginPlay()
 	{
 		PC = UGameplayStatics::GetPlayerController(this, 0);
 	}
+	GetWorldTimerManager().SetTimer(PrintMessage, this, &ThisClass::OnPrintMessage, 4.f,false);
 }
 
 void AC_Character::Move(const FInputActionValue& Value)
@@ -200,4 +201,20 @@ void AC_Character::OnRep_PickUp()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("PickedUpNum: %d"), PickedUpNum));
 }
+
+void AC_Character::Client_PrintMessage_Implementation(const FString& Message)
+{
+	FString MessagePrint = HasAuthority() ? "Sereve:" : "Client:";
+	MessagePrint += Message;
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, MessagePrint);
+}
+
+void AC_Character::OnPrintMessage()
+{
+	if (HasAuthority())
+	{
+		Client_PrintMessage("aaa");
+	}
+}
+
 

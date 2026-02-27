@@ -127,6 +127,14 @@ private:
 	UFUNCTION()
 	void OnRep_PickUp();
 
+	void Client_PrintMessage_Implementation(const FString& Message);
+
+	UFUNCTION(Client,Reliable)
+	void Client_PrintMessage(const FString& Message);
+
+	FTimerHandle PrintMessage;
+
+	void OnPrintMessage();
 
 	APlayerController* PC;
 };
