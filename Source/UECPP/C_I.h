@@ -6,6 +6,8 @@
 #include "UObject/Interface.h"
 #include "C_I.generated.h"
 
+class AC_Character;
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UC_I : public UInterface
@@ -24,7 +26,7 @@ class UECPP_API IC_I
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "MyInterface")
-	void ShowWidget(APlayerController* PC);
+	void ShowWidget(AC_Character* Pawn);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "MyInterface")
 	void HideWidget();

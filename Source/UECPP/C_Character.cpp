@@ -118,12 +118,17 @@ void AC_Character::PickUp()
 	}
 }
 
-void AC_Character::MoveActor()
+void AC_Character::MoveActor_Implementation()
 {
 	if (TargetActor.IsBound())
 	{
-		TargetActor.Execute();
+		TargetActor.Execute(this);
 	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("no targetactor")));
+	}
+	Mult_PrintMessage("Mult");
 }
 
 void AC_Character::OverlapWithActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -132,7 +137,7 @@ void AC_Character::OverlapWithActor(UPrimitiveComponent* OverlappedComponent, AA
 	{
 		if (OtherActor->Implements<UC_I>())
 		{
-			IC_I::Execute_ShowWidget(OtherActor,PC);
+			IC_I::Execute_ShowWidget(OtherActor,this);
 			PickUpActor = OtherActor;
 		}
 	}
@@ -207,6 +212,13 @@ void AC_Character::Client_PrintMessage_Implementation(const FString& Message)
 	FString MessagePrint = HasAuthority() ? "Sereve:" : "Client:";
 	MessagePrint += Message;
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, MessagePrint);
+}
+
+void AC_Character::Mult_PrintMessage_Implementation(const FString& Message)
+{
+	FString MessagePrint = HasAuthority() ? "Sereve:" : "Client:";
+	MessagePrint += Message;
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, MessagePrint);
 }
 
 void AC_Character::OnPrintMessage()

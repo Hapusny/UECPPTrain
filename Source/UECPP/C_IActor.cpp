@@ -25,36 +25,28 @@ void AC_IActor::BeginPlay()
 {
 	Super::BeginPlay();
 	AC_Character* MYC;
-	if (GetNetConnection())
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
-		MYC = Cast<AC_Character>(Cast<APlayerController>(GetNetConnection()->PlayerController)->GetPawn());
-	}
-	else
-	{
-		MYC = Cast<AC_Character>(UGameplayStatics::GetPlayerController(this, 0)->GetPawn());
-	}
-	if (MYC)
-	{
-		MYC->TargetActor.BindUObject(this, &AC_IActor::MoveActorToPlayer);
+		APlayerController* PlayerController = Iterator->Get();
+		if (PlayerController)
+		{
+			MYC = Cast<AC_Character>(PlayerController->GetPawn());
+			if (MYC)
+			{
+				MYC->TargetActor.BindUObject(this, &AC_IActor::MoveActorToPlayer);
+				this->SetOwner(MYC);
+			}
+		}
 	}
 }
 
-void AC_IActor::MoveActorToPlayer()
+void AC_IActor::MoveActorToPlayer(AC_Character* TargetPlayer)
 {
-	APlayerController* PC;
-	if (GetNetConnection())
+	if (TargetPlayer)
 	{
-		PC = Cast<APlayerController>(GetNetConnection()->PlayerController);
-	}
-	else
-	{
-		PC = UGameplayStatics::GetPlayerController(this, 0);
-	}
-	if (PC)
-	{
-		FVector NewPlace = PC->GetPawn()->GetActorLocation();
+		FVector NewPlace = TargetPlayer->GetActorLocation();
 
-		const FRotator Rotation = PC->GetControlRotation();
+		const FRotator Rotation = TargetPlayer->GetController()->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
@@ -64,6 +56,7 @@ void AC_IActor::MoveActorToPlayer()
 	}
 }
 
+
 // Called every frame
 void AC_IActor::Tick(float DeltaTime)
 {
@@ -71,9 +64,9 @@ void AC_IActor::Tick(float DeltaTime)
 
 }
 
-void AC_IActor::ShowWidget_Implementation(APlayerController* PC)
+void AC_IActor::ShowWidget_Implementation(AC_Character* Pawn)
 {
-	if (PC)
+	if (APlayerController* PC = Cast<APlayerController>(Pawn->GetController()))
 	{
 		if (ShowWidget)
 		{

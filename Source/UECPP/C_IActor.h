@@ -8,6 +8,7 @@
 #include "C_IActor.generated.h"
 
 class UUserWidget;
+class AC_Character;
 
 UCLASS()
 class UECPP_API AC_IActor : public AActor,public IC_I
@@ -22,13 +23,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void MoveActorToPlayer();
+	void MoveActorToPlayer(AC_Character* TargetPlayer);
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void ShowWidget_Implementation(APlayerController* PC) override;
+	virtual void ShowWidget_Implementation(AC_Character* Pawn) override;
 
 	virtual void HideWidget_Implementation() override;
 

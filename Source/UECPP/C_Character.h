@@ -14,7 +14,7 @@ class USphereComponent;
 class UC_HealthComponent;
 struct FInputActionValue;
 
-DECLARE_DELEGATE(FMoveActor)
+DECLARE_DELEGATE_OneParam(FMoveActor,AC_Character*)
 
 UCLASS()
 class UECPP_API AC_Character : public ACharacter,public IC_IPC
@@ -40,6 +40,7 @@ protected:
 
 	void PickUp();
 
+	UFUNCTION(Server,Reliable)
 	void MoveActor();
 
 	UFUNCTION()
@@ -131,6 +132,9 @@ private:
 
 	UFUNCTION(Client,Reliable)
 	void Client_PrintMessage(const FString& Message);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Mult_PrintMessage(const FString& Message);
 
 	FTimerHandle PrintMessage;
 
