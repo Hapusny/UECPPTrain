@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "C_HealthComponent.h"
+#include "C_MyGS.h"
 
 AC_Character::AC_Character()
 {
@@ -120,7 +121,7 @@ void AC_Character::PickUp()
 
 void AC_Character::MoveActor_Implementation()
 {
-	if (TargetActor.IsBound())
+	/*if (TargetActor.IsBound())
 	{
 		TargetActor.Execute(this);
 	}
@@ -128,7 +129,17 @@ void AC_Character::MoveActor_Implementation()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("no targetactor")));
 	}
-	Mult_PrintMessage("Mult");
+	Mult_PrintMessage("Mult");*/
+	AC_MyGS* GameState = Cast<AC_MyGS>(UGameplayStatics::GetGameState(this));
+	FString TeamMessage = "Team ";
+	if (IsValid(GameState)) {
+		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		if (PlayerController) {
+			if (GameState->IsTeamOne(PlayerController))TeamMessage += "One";
+			else TeamMessage += "Two";
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TeamMessage);
+		}
+	}
 }
 
 void AC_Character::OverlapWithActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -173,7 +184,7 @@ void AC_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AC_Character::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AC_Character::StopJump);
 		EnhancedInputComponent->BindAction(PickUpAction, ETriggerEvent::Triggered, this, &AC_Character::PickUp);
-		EnhancedInputComponent->BindAction(MoveActorAction, ETriggerEvent::Triggered, this, &AC_Character::MoveActor);
+		EnhancedInputComponent->BindAction(MoveActorAction, ETriggerEvent::Triggered, this, &AC_Character::MoveActor_Implementation);
 	}
 }
 
