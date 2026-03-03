@@ -141,4 +141,7 @@ private:
 	void OnPrintMessage();
 
 	APlayerController* PC;
+
+	UFUNCTION(Server,Reliable)
+	void Serevr_AddPlayerScore();
 };

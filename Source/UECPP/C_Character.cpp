@@ -13,6 +13,7 @@
 #include "Net/UnrealNetwork.h"
 #include "C_HealthComponent.h"
 #include "C_MyGS.h"
+#include "C_MyPS.h"
 
 AC_Character::AC_Character()
 {
@@ -140,6 +141,8 @@ void AC_Character::MoveActor_Implementation()
 			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TeamMessage);
 		}
 	}
+	AC_MyPS* PS = Cast<AC_MyPS>(GetPlayerState());
+	if(PS)GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("Score: %d"), PS->GetPlayerScore()));
 }
 
 void AC_Character::OverlapWithActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -192,6 +195,7 @@ void AC_Character::SpawnArmor_Implementation(float ArmorAmount)
 {
 	Armor = ArmorAmount;
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("Armor: %f"), Armor));
+	Serevr_AddPlayerScore();
 }
 
 void AC_Character::ChangeHealth_Implementation(float Change)
@@ -237,6 +241,15 @@ void AC_Character::OnPrintMessage()
 	if (HasAuthority())
 	{
 		Client_PrintMessage("aaa");
+	}
+}
+
+void AC_Character::Serevr_AddPlayerScore_Implementation()
+{
+	AC_MyPS* PS = Cast<AC_MyPS>(GetPlayerState());
+	if (PS)
+	{
+		PS->AddPlayerScore();
 	}
 }
 
