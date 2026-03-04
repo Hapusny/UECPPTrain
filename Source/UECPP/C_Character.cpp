@@ -40,15 +40,12 @@ AC_Character::AC_Character()
 void AC_Character::BeginPlay()
 {
 	Super::BeginPlay();
-	if (GetNetConnection())
+	Client_PrintMessage("111");
+	GetWorldTimerManager().SetTimer(PrintMessage, this, &ThisClass::OnPrintMessage, 4.f, false);
+	if (PC && PC->IsLocalController())
 	{
-		PC = Cast<APlayerController>(GetNetConnection()->PlayerController);
+		MySpawnWidget = CreateWidget<UUserWidget>(PC, MyShowWidgetClass);
 	}
-	else
-	{
-		PC = UGameplayStatics::GetPlayerController(this, 0);
-	}
-	GetWorldTimerManager().SetTimer(PrintMessage, this, &ThisClass::OnPrintMessage, 4.f,false);
 }
 
 void AC_Character::Move(const FInputActionValue& Value)
@@ -147,25 +144,31 @@ void AC_Character::MoveActor_Implementation()
 
 void AC_Character::OverlapWithActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (HasAuthority())
+	/*if (HasAuthority())
 	{
 		if (OtherActor->Implements<UC_I>())
 		{
 			IC_I::Execute_ShowWidget(OtherActor,this);
 			PickUpActor = OtherActor;
 		}
+	}*/
+	if (OtherActor->Implements<UC_I>()) {
+		if (IsValid(MySpawnWidget))MySpawnWidget->AddToViewport();
 	}
 }
 
 void AC_Character::EndOverlapWithActor(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (HasAuthority())
+	/*if (HasAuthority())
 	{
 		if (OtherActor->Implements<UC_I>())
 		{
 			IC_I::Execute_HideWidget(OtherActor);
 			PickUpActor = nullptr;
 		}
+	}*/
+	if (OtherActor->Implements<UC_I>()) {
+		if (IsValid(MySpawnWidget))MySpawnWidget->RemoveFromParent();
 	}
 }
 
@@ -227,6 +230,7 @@ void AC_Character::Client_PrintMessage_Implementation(const FString& Message)
 	FString MessagePrint = HasAuthority() ? "Sereve:" : "Client:";
 	MessagePrint += Message;
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, MessagePrint);
+	PC = Cast<APlayerController>(GetController());
 }
 
 void AC_Character::Mult_PrintMessage_Implementation(const FString& Message)

@@ -116,6 +116,9 @@ private:
 
 	TObjectPtr<AActor>MySpawnActor;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget>MyShowWidgetClass;
+
 	UPROPERTY()
 	TObjectPtr<UUserWidget>MySpawnWidget;
 
